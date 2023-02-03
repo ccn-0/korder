@@ -151,10 +151,10 @@ bool handle_intercept(InterceptionDevice device, InterceptionStroke &stroke)
             switch (state)
             {
             case APP_IDLE:
-                state = APP_REPLAYING;
-                std::cout << "[Info] Replay started\n";
-                t_replay_start = std::chrono::high_resolution_clock::now();
                 record_ptr = 0;
+                t_replay_start = std::chrono::high_resolution_clock::now();
+                state = APP_REPLAYING;
+                std::cout << "[Info] Replay started\n";         
                 break;
             case APP_RECORDING:
                 std::cout << "[Errr] You must stop recording before you can start replaying!\n";
@@ -209,13 +209,6 @@ int main() {
 
     while (interception_receive(ctx, device = interception_wait(ctx), &stroke, 1) > 0)
     {  
-        /*
-        if (interception_is_keyboard(device))
-        {
-            InterceptionKeyStroke& ks = *(InterceptionKeyStroke*)&stroke;
-            std::cout << ks.code << " " << ks.state << "\n";
-        }*/
-
         if( handle_intercept(device, stroke) )
             interception_send(ctx, device, &stroke, 1);
     }
